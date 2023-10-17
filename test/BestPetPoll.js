@@ -108,6 +108,14 @@ describe('BestPetPoll', () => {
         await expect(transaction).to.emit(bestPetPoll, 'Vote')
           .withArgs(user1.address, VoteType.Rodent)
       })
+
+      it ('returns proper hasVoted status', async () => {
+        expect(await bestPetPoll.hasVoted(user3)).to.equal(false)
+        transaction = await bestPetPoll.connect(user3).voteForFish()
+        result = await transaction.wait()
+        expect(await bestPetPoll.hasVoted(user3)).to.equal(true)
+      })
+
     })
 
     describe('Failure', () => {
