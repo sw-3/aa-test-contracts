@@ -16,6 +16,12 @@ contract BestPetPoll {
         VoteType vote
     );
 
+    event ChangeVote(
+        address voter,
+        VoteType priorVote,
+        VoteType newVote
+    );
+
     constructor () {
         owner = msg.sender;
 
@@ -27,17 +33,31 @@ contract BestPetPoll {
 
     // internal vote function
     function _vote(VoteType _voteType) internal {
-        // prevent double voting
-        require(!hasVoted(msg.sender), "Already voted.");
+        VoteType priorVoteType;
+        bool changeVote = false;
 
-        // increment vote count
+        // if they already voted, change their vote
+        if (hasVoted(msg.sender)) {
+
+            changeVote = true;
+
+            // user already voted, subtract their prior vote
+            priorVoteType = userHasVoted[msg.sender];
+            votes[uint8(priorVoteType)]--;
+        }
+
+        // increment count for this vote
         votes[uint8(_voteType)]++;
 
         // track that the user has voted
         userHasVoted[msg.sender] = _voteType;
 
         // emit an event
-        emit Vote(msg.sender, _voteType);
+        if (changeVote) {
+            emit ChangeVote(msg.sender, priorVoteType, _voteType);
+        } else {
+            emit Vote(msg.sender, _voteType);
+        }
     }
 
 

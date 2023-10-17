@@ -116,17 +116,38 @@ describe('BestPetPoll', () => {
         expect(await bestPetPoll.hasVoted(user3)).to.equal(true)
       })
 
+      it ('handles a change vote properly', async () => {
+        // 3 users vote for Fish
+        transaction = await bestPetPoll.connect(user1).voteForFish()
+        result = await transaction.wait()
+        transaction = await bestPetPoll.connect(user2).voteForFish()
+        result = await transaction.wait()
+        transaction = await bestPetPoll.connect(user3).voteForFish()
+        result = await transaction.wait()
+        expect(await bestPetPoll.getFishVotes()).to.equal(3)
+        expect(await bestPetPoll.getCatVotes()).to.equal(0)
+
+        // user2 already voted... but votes again
+        expect(await bestPetPoll.hasVoted(user2)).to.equal(true)
+        transaction = await bestPetPoll.connect(user2).voteForCat()
+        result = await transaction.wait()
+
+        // check votes
+        expect(await bestPetPoll.getFishVotes()).to.equal(2)
+        expect(await bestPetPoll.getCatVotes()).to.equal(1)
+
+        // check for proper ChangeVote event
+        await expect(transaction).to.emit(bestPetPoll, 'ChangeVote')
+          .withArgs(user2.address, VoteType.Fish, VoteType.Cat)
+      })
+
     })
 
     describe('Failure', () => {
 
-      it ('does not allow multiple votes', async () => {
-        transaction = await bestPetPoll.connect(user1).voteForFish()
-        result = await transaction.wait()
-        expect(await bestPetPoll.getFishVotes()).to.equal(1)
-        await expect(bestPetPoll.connect(user1).voteForDog()).to.be.reverted
-      })
+      it ('no failure cases', async () => {
 
+      })
     })
 
   })
