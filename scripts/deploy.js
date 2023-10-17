@@ -5,7 +5,14 @@ const hre = require("hardhat");
 
 async function main() {
 
-  console.log("Done.");
+  console.log('\n\n\nDeploying BestPetPoll contract...\n')
+
+  const bestPetPoll = await hre.ethers.deployContract("BestPetPoll")
+  await bestPetPoll.waitForDeployment();
+
+  console.log(`\nBestPetPoll deployed to: ${bestPetPoll.target}\n`)
+
+  console.log("\nDone.\n");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
