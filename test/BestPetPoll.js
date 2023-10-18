@@ -7,7 +7,7 @@ const VoteType = {
   Dog: 2,
   Horse: 3,
   Fish: 4,
-  Rodent: 5,
+  Bird: 5,
   Reptile: 6
 }
 
@@ -36,7 +36,7 @@ describe('BestPetPoll', () => {
       expect(await bestPetPoll.getDogVotes()).to.equal(0)
       expect(await bestPetPoll.getHorseVotes()).to.equal(0)
       expect(await bestPetPoll.getFishVotes()).to.equal(0)
-      expect(await bestPetPoll.getRodentVotes()).to.equal(0)
+      expect(await bestPetPoll.getBirdVotes()).to.equal(0)
       expect(await bestPetPoll.getReptileVotes()).to.equal(0)
     })
 
@@ -74,10 +74,10 @@ describe('BestPetPoll', () => {
         expect(await bestPetPoll.getFishVotes()).to.equal(1)
       })
 
-      it ('records a vote for Rodent', async () => {
-        transaction = await bestPetPoll.connect(user1).voteForRodent()
+      it ('records a vote for Bird', async () => {
+        transaction = await bestPetPoll.connect(user1).voteForBird()
         result = await transaction.wait()
-        expect(await bestPetPoll.getRodentVotes()).to.equal(1)
+        expect(await bestPetPoll.getBirdVotes()).to.equal(1)
       })
 
       it ('records a vote for Reptile', async () => {
@@ -102,11 +102,11 @@ describe('BestPetPoll', () => {
       })
 
       it ('emits vote event', async () => {
-        transaction = await bestPetPoll.connect(user1).voteForRodent()
+        transaction = await bestPetPoll.connect(user1).voteForBird()
         result = await transaction.wait()
 
         await expect(transaction).to.emit(bestPetPoll, 'Vote')
-          .withArgs(user1.address, VoteType.Rodent)
+          .withArgs(user1.address, VoteType.Bird)
       })
 
       it ('returns proper hasVoted status', async () => {

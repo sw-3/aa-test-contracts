@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 contract BestPetPoll {
     address owner;
     uint8 constant numVoteTypes = 7;
-    enum VoteType { None, Cat, Dog, Horse, Fish, Rodent, Reptile }
+    enum VoteType { None, Cat, Dog, Horse, Fish, Bird, Reptile }
 
     mapping(address => VoteType) userHasVoted;
 
@@ -80,8 +80,8 @@ contract BestPetPoll {
         _vote(VoteType.Fish);
     }
 
-    function voteForRodent() external {
-        _vote(VoteType.Rodent);
+    function voteForBird() external {
+        _vote(VoteType.Bird);
     }
 
     function voteForReptile() external {
@@ -111,8 +111,8 @@ contract BestPetPoll {
         return votes[uint8(VoteType.Fish)];
     }
 
-    function getRodentVotes() public view returns(uint256) {
-        return votes[uint8(VoteType.Rodent)];
+    function getBirdVotes() public view returns(uint256) {
+        return votes[uint8(VoteType.Bird)];
     }
 
     function getReptileVotes() public view returns(uint256) {
